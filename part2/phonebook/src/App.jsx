@@ -16,7 +16,7 @@ const App = () => {
   useEffect(() => {
     // to get initialized the data with the db
     personService.getAll().then((allInitialPersons) => {
-      // if promise succeded, initiate the data returned as the value for the setPersons
+      // if promise succeeded, initiate the data returned as the value for the setPersons
       setPersons(allInitialPersons) // sets persons to initialData
     })
   }, []) // executes the effect only once at the first render
@@ -39,22 +39,31 @@ const App = () => {
             setTimeout(() => {
               setMessage(null)
               setClassMessage(null)
-            }, 3000)
+            }, 5000)
           })
       }
     } else {
       // add the new person to DB
-      personService.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName("") // reset the setNewName variable
-        setNewNumber("") // reset the setNewName variable
-        setMessage(`'${personObject.name}' added to the phonebook with number '${personObject.number}'`)
-        setClassMessage('confirmation')
-        setTimeout(() => {
-          setMessage(null)
-          setClassMessage(null)
-        }, 3000)
-      })
+      personService.create(personObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName("") // reset the setNewName variable
+          setNewNumber("") // reset the setNewName variable
+          setMessage(`'${personObject.name}' added to the phonebook with number '${personObject.number}'`)
+          setClassMessage('confirmation')
+          setTimeout(() => {
+            setMessage(null)
+            setClassMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          setMessage(error.response.data.error)
+          setClassMessage('error')
+          setTimeout(() => {
+            setMessage(null)
+            setClassMessage(null)
+          }, 5000)
+        })
     }
   }
 
@@ -79,7 +88,7 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
             setClassMessage(null)
-          }, 3000)
+          }, 5000)
           setPersons(persons.filter((person) => person.id !== id)) // updates the list of new persons
         })
         .catch(error => {
@@ -88,7 +97,7 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
             setClassMessage(null)
-          }, 3000)
+          }, 5000)
           setPersons(persons.filter(p => p.id !== personToDelete.id))
         })
     }
