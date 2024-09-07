@@ -15,7 +15,7 @@ describe("Clean start with one user in DB", () => {
     const user = new User({
       username: "test",
       name: "Test full name",
-      passwordHash,
+      passwordHash
     })
     await user.save()
   })
@@ -25,7 +25,7 @@ describe("Clean start with one user in DB", () => {
     const newUser = {
       username: "user2",
       name: "George del Trombo",
-      password: "terracota",
+      password: "terracota"
     }
     await api
       .post("/api/users")
@@ -43,7 +43,7 @@ describe("Clean start with one user in DB", () => {
     const newUser = {
       username: "test",
       name: "Superuser",
-      password: "password",
+      password: "password"
     }
     const result = await api
       .post("/api/users")
@@ -56,13 +56,12 @@ describe("Clean start with one user in DB", () => {
   })
 })
 
-
 describe("No users on the DB", () => {
   test("Creates an user with short username", async () => {
     const newUser = {
       username: "t",
       name: "Superuser",
-      password: "password",
+      password: "password"
     }
     const result = await api
       .post("/api/users")
@@ -76,7 +75,7 @@ describe("No users on the DB", () => {
     const newUser = {
       username: "test123",
       name: "Superuser",
-      password: "p",
+      password: "p"
     }
     const result = await api
       .post("/api/users")
@@ -86,7 +85,6 @@ describe("No users on the DB", () => {
     assert(result.body.error.includes("Password must be at least 3 characters long"))
   })
 })
-
 
 after(async () => {
   await mongoose.connection.close()
