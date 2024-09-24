@@ -54,7 +54,6 @@ const EntryForm: React.FC<Props> = ({ patientId, onEntryAdded }) => {
       specialist,
       diagnosisCodes
     };
-
     let entryData: EntryFormValues;
 
     switch (entryType) {
@@ -234,8 +233,9 @@ const EntryForm: React.FC<Props> = ({ patientId, onEntryAdded }) => {
       )}
 
       <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-        Add Entry
+        Add entry
       </Button>
+      
     </Box>
   );
 };
