@@ -22,12 +22,14 @@ const Books = (props) => {
             <th></th>
             <th>Author</th>
             <th>Published</th>
+            <th>Genres</th>
           </tr>
           {books.map((b) => (
             <tr key={b.id}>
               <td>{b.title}</td>
-              <td>{b.author}</td>
+              <td>{b.author.name}</td>
               <td>{b.published}</td>
+              <td>{b.genres.join(", ")}</td>
             </tr>
           ))}
         </tbody>
