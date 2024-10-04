@@ -1,16 +1,40 @@
 import { useState } from "react";
+import { useApolloClient, useSubscription, useQuery } from "@apollo/client";
+import LoginForm from "./components/LoginForm";
+import User from "./components/User";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
-import { useApolloClient, useQuery } from "@apollo/client";
-import LoginForm from "./components/LoginForm";
-import User from "./components/User";
+import { ALL_BOOKS, BOOK_ADDED } from "./queries";
+
+// Helper to clears the cache
+export const updateCache = (cache, query, addedBook) => {
+  const uniqByName = (a) => {
+    let seen = new Set();
+    return a.filter((item) => {
+      let k = item.name;
+      return seen.has(k) ? false : seen.add(k);
+    });
+  };
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByName(allBooks.concat(addedBook))
+    };
+  });
+};
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [errorMessage, setErrorMessage] = useState(null);
   const [token, setToken] = useState(null);
   const client = useApolloClient();
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded;
+      window.alert(`${addedBook.title} added to the book library`);
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook);
+    }
+  });
   const notify = (message) => {
     setErrorMessage(message);
     setTimeout(() => {
@@ -18,10 +42,10 @@ const App = () => {
     }, 10000);
   };
   const logout = () => {
-    setToken(null)
-    localStorage.clear()
-    client.resetStore()
-  }
+    setToken(null);
+    localStorage.clear();
+    client.resetStore();
+  };
   if (!token) {
     return (
       <div>
@@ -35,7 +59,13 @@ const App = () => {
         </div>
         <Authors show={page === "authors"} />
         <Books show={page === "books"} />
-        {page==="login" && <LoginForm show={page === "login"} setToken={setToken} setError={notify} />}
+        {page === "login" && (
+          <LoginForm
+            show={page === "login"}
+            setToken={setToken}
+            setError={notify}
+          />
+        )}
       </div>
     );
   }
@@ -55,7 +85,7 @@ const App = () => {
       <Authors show={page === "authors"} />
       <Books show={page === "books"} />
       <NewBook show={page === "add"} />
-      {page==="user" && <User show={page == "user"} />}
+      {page === "user" && <User show={page == "user"} />}
     </div>
   );
 };
