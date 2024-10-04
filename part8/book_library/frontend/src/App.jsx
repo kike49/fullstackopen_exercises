@@ -4,6 +4,7 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import { useApolloClient, useQuery } from "@apollo/client";
 import LoginForm from "./components/LoginForm";
+import User from "./components/User";
 
 const App = () => {
   const [page, setPage] = useState("authors");
@@ -47,11 +48,14 @@ const App = () => {
         &nbsp;
         <button onClick={() => setPage("add")}>Add book</button>
         &nbsp;
+        <button onClick={() => setPage("user")}>User</button>
+        &nbsp;
         <button onClick={logout}>Logout</button>
       </div>
       <Authors show={page === "authors"} />
       <Books show={page === "books"} />
       <NewBook show={page === "add"} />
+      {page==="user" && <User show={page == "user"} />}
     </div>
   );
 };

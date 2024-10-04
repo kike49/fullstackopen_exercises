@@ -19,8 +19,8 @@ const Authors = (props) => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+  
   const authors = data.allAuthors;
-
   const submit = async (event) => {
     event.preventDefault();
     if (!name || !setBornTo) {
